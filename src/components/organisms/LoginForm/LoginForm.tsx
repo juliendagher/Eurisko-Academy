@@ -6,6 +6,7 @@ import ShowPassLogo from "../../../assets/eye.svg";
 import { useState } from "react";
 import { ChangeEvent } from "react";
 import { FormEvent } from "react";
+import { useAuthStore } from "../../../stores/auth";
 
 async function postData(url: string, email: string, password: string) {
   const response = await fetch(url, {
@@ -30,6 +31,8 @@ async function postData(url: string, email: string, password: string) {
 }
 
 const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
+  const auth = useAuthStore();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -54,7 +57,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
     setLoading(true);
     postData("/api/login", formData.email, formData.password)
       .then((data) =>
-        data.status === 200 ? "get in" : setErrorMessage(data.result.message)
+        data.status === 200 ? auth.setTokens(data.result.data) : setErrorMessage(data.result.message)
       )
       .catch((error) => console.error("Login failed:", error.message))
       .finally(() => setLoading(false));
