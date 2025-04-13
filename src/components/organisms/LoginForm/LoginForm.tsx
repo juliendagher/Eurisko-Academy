@@ -35,6 +35,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,9 +46,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     postData("/api/login", formData.email, formData.password)
       .then((data) => console.log(data))
-      .catch((error) => console.error("Login failed:", error.message));
+      .catch((error) => console.error("Login failed:", error.message))
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -93,7 +97,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
           </button>
         </div>
         <div className="flex justify-center">
-          <Button type="submit">Login</Button>
+          <Button disabled={loading} type="submit">
+            Login
+          </Button>
         </div>
       </form>
     </div>

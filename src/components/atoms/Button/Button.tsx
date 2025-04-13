@@ -22,9 +22,9 @@ const Button: React.FC<ButtonProps> = React.memo(
         type={type}
         onClick= {onClick/*!disabled ? onClick : undefined*/}
         className={
-          "px-4 py-2 rounded transition-colors duration-50" + " " +
-          variantStyles[variant] + " " +
-          className
+          className + " " +
+          "px-4 py-2 rounded transition-colors duration-100 disabled:text-gray-300" + " " +
+          variantStyles[variant]
           //disabled button styling?
         }
         disabled={disabled}
