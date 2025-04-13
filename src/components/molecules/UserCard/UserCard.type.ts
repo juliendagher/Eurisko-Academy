@@ -1,7 +1,8 @@
 interface UserCardProps {
+    key: number,
     name: string, 
     email: string, 
-    status: boolean, 
+    status: string, 
     birthday: string 
 }
 
