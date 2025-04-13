@@ -37,18 +37,25 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const [errorMessage, setErrorMessage] = useState("       ");
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    const { name, value }: { name: string; value: string } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if(formData.email !== "" && formData.password !== "") {
+        setErrorMessage("")
+    }
   };
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     postData("/api/login", formData.email, formData.password)
-      .then((data) => console.log(data))
+      .then((data) =>
+        data.status === 200 ? "get in" : setErrorMessage(data.result.message)
+      )
       .catch((error) => console.error("Login failed:", error.message))
       .finally(() => setLoading(false));
   };
@@ -96,8 +103,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
             )}
           </button>
         </div>
+        <p className="text-xs text-red-500">{errorMessage}</p>
         <div className="flex justify-center">
-          <Button disabled={loading} type="submit">
+          <Button
+            disabled={loading}
+            type="submit"
+            onClick={() =>
+              formData.email === "" && formData.password === ""
+                ? setErrorMessage("Fill required fields.")
+                : setErrorMessage("")
+            }
+          >
             Login
           </Button>
         </div>
