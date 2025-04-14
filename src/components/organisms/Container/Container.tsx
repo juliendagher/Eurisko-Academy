@@ -26,21 +26,22 @@ export const Container = () => {
   const token = useAuthStore((state) => state.accessToken);
   const logout = useAuthStore((state) => state.logout);
   const [users, setUsers] = useState<User[]>([]);
+  const [searchParams, setSearchParams] = useState("");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    getData("/api/users", token)
+    getData("/api/users?search="+searchParams, token)
       .then((data) =>
         data.status === 200 ? setUsers(data.result.data.users) : logout()
       )
       .catch((error) => console.error(error.message))
       .finally(() => setLoading(false));
-  }, [logout, token]);
+  }, [logout, token, searchParams]);
 
   return (
     <div className="p-6 space-y-5">
-      <SearchBar />
+      <SearchBar label="" value={searchParams} onChange={(e) => (setSearchParams(e.target.value))}/>
       {!loading ? (
         <div className="flex gap-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {users.map(
