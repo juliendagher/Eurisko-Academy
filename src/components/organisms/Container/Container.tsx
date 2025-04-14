@@ -3,6 +3,7 @@ import { useAuthStore } from "../../../stores/auth";
 import { SearchBar } from "../../molecules/SearchBar/SearchBar";
 import { UserCard } from "../../molecules/UserCard/UserCard";
 import { User } from "./Container.type";
+import { LoadingSpinner } from "../../atoms/LoadingSpinner";
 
 const getData = async (url: string, accessToken: string | null) => {
   const response = await fetch(url, {
@@ -30,7 +31,9 @@ export const Container = () => {
   useEffect(() => {
     setLoading(true);
     getData("/api/users", token)
-      .then((data) => (data.status === 200 ? setUsers(data.result.data.users) : logout()))
+      .then((data) =>
+        data.status === 200 ? setUsers(data.result.data.users) : logout()
+      )
       .catch((error) => console.error(error.message))
       .finally(() => setLoading(false));
   }, [logout, token]);
@@ -38,9 +41,10 @@ export const Container = () => {
   return (
     <div className="p-6 space-y-5">
       <SearchBar />
-      <div className="flex gap-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        {!loading
-          ? users.map(({ id, firstName, lastName, email, status, dateOfBirth }) => (
+      {!loading ? (
+        <div className="flex gap-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          {users.map(
+            ({ id, firstName, lastName, email, status, dateOfBirth }) => (
               <UserCard
                 key={id}
                 name={`${firstName} ${lastName || ""}`}
@@ -48,9 +52,12 @@ export const Container = () => {
                 status={status}
                 birthday={dateOfBirth}
               />
-            ))
-          : "loading"}
-      </div>
+            )
+          )}
+        </div>
+      ) : (
+        <LoadingSpinner />
+      )}
     </div>
   );
 };
