@@ -106,7 +106,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
             )}
           </button>
         </div>
-        <p className="text-xs text-red-500">{errorMessage}</p>
+        <p className="text-xs text-red-500 font-bold">{errorMessage}</p>
         <div className="flex justify-center">
           <Button
             disabled={loading}
