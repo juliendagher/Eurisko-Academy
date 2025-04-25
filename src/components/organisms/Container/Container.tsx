@@ -39,7 +39,6 @@ export const Container = () => {
 
   const debouncedFetch = useMemo(() => {
     return debounce((search: string, accessToken: string | null) => {
-      setLoading(true);
       getData(`/api/users?search=${search}`, accessToken)
         .then((data) => {
           if (data.status === 200) {
@@ -54,6 +53,7 @@ export const Container = () => {
   }, [logout]);
 
   useEffect(() => {
+    setLoading(true);
     debouncedFetch(search, token);
     return () => {
       debouncedFetch.cancel();
