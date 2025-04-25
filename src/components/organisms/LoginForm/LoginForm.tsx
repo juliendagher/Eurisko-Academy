@@ -15,10 +15,8 @@ async function postData(url: string, email: string, password: string) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      body: {
         email,
         password,
-      },
     }),
   });
 

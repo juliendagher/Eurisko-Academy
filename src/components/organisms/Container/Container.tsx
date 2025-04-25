@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuthStore } from "../../../stores/auth";
 import { SearchBar } from "../../molecules/SearchBar/SearchBar";
 import { UserCard } from "../../molecules/UserCard/UserCard";
 import { User } from "./Container.type";
 import { LoadingSpinner } from "../../atoms/LoadingSpinner";
 import { useSearchParams } from "react-router";
+import debounce from "lodash.debounce";
 
 const getData = async (url: string, accessToken: string | null) => {
   const response = await fetch(url, {
@@ -36,31 +37,48 @@ export const Container = () => {
     setSearchParams({ search: e.target.value });
   };
 
+  const debouncedFetch = useMemo(() => {
+    return debounce((search: string, accessToken: string | null) => {
+      setLoading(true);
+      getData(`/api/users?search=${search}`, accessToken)
+        .then((data) => {
+          if (data.status === 200) {
+            setUsers(data.result.data.users);
+          } else {
+            logout();
+          }
+        })
+        .catch((error) => console.error(error.message))
+        .finally(() => setLoading(false));
+    }, 300);
+  }, [logout]);
+
   useEffect(() => {
-    setLoading(true);
-    getData("/api/users?search="+search, token)
-      .then((data) =>
-        data.status === 200 ? setUsers(data.result.data.users) : logout()
-      )
-      .catch((error) => console.error(error.message))
-      .finally(() => setLoading(false));
-  }, [logout, token, search]);
+    debouncedFetch(search, token);
+    return () => {
+      debouncedFetch.cancel();
+    };
+  }, [search, token, debouncedFetch]);
 
   return (
     <div className="p-6 space-y-5">
-      <SearchBar label="" value={search} onChange={handleChange}/>
+      <SearchBar label="" value={search} onChange={handleChange} />
       {!loading ? (
         <div className="flex gap-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-          {users.map(
-            ({ id, firstName, lastName, email, status, dateOfBirth }) => (
-              <UserCard
-                key={id}
-                name={`${firstName} ${lastName || ""}`}
-                email={email}
-                status={status}
-                birthday={dateOfBirth}
-              />
+          {users.length !== 0 ? (
+            users.map(
+              ({ id, firstName, lastName, email, status, dateOfBirth }) => (
+                <UserCard
+                  key={id}
+                  name={`${firstName} ${lastName || ""}`}
+                  email={email}
+                  status={status}
+                  birthday={dateOfBirth}
+                />
+              )
             )
+          ) : (
+            <p className="text-red-500">No results</p>
           )}
         </div>
       ) : (
