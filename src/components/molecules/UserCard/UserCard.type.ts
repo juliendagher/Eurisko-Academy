@@ -1,5 +1,5 @@
 interface UserCardProps {
-    key: number,
+    id: number,
     name: string, 
     email: string, 
     status: string, 
