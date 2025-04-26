@@ -67,7 +67,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ className }) => {
         "flex flex-col items-center justify-center p-7 dark:bg-[#205295]" + " " + className
       }
     >
-      <h2 className="text-2xl font-bold text-center dark:text-white">Login</h2>
+      <p className="text-2xl font-bold text-center dark:text-white">Login</p>
       <form
         className="flex flex-col gap-5 w-full h-full"
         onSubmit={handleSubmit}

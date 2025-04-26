@@ -5,6 +5,8 @@ import { Login } from "./components/pages/Login";
 import { AuthenticationRoute } from "./routes/AuthenticationRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { useThemeStore } from "./stores/theme";
+import { Container } from "./components/organisms/Container";
+import { UserDetailsForm } from "./components/organisms/UserDetailsForm";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -16,7 +18,6 @@ function App() {
       document.documentElement.classList.remove("dark");
     }
   }, [theme]);
-
 
   return (
     <Routes>
@@ -35,7 +36,11 @@ function App() {
             <DashBoard />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route index element={<Container />} />
+        <Route path="/dashboard" element={<Container />} />
+        <Route path="/dashboard/new" element={<UserDetailsForm />} />
+      </Route>
     </Routes>
   );
 }

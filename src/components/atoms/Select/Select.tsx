@@ -1,9 +1,9 @@
-import { InputProps } from "./Input.type";
+import { SelectProps } from "./Select.type";
 
-const Input: React.FC<InputProps> = ({
+const Select: React.FC<SelectProps> = ({
   label,
+  options,
   error = "",
-  type = "text",
   className,
   ...props
 }) => (
@@ -11,17 +11,21 @@ const Input: React.FC<InputProps> = ({
     <label className="block mb-1 text-sm font-medium text-gray-700 dark:text-white">
       {label}
     </label>
-    <input
+    <select
       className={
         "border border-gray-400 focus:border-primary rounded p-2 dark:text-white" +
         " " +
         className
       }
-      type={type}
       {...props}
-    />
+    >
+      {options.map((optionName) => (
+        <option value={optionName}>{optionName}</option>
+      ))}
+    </select>
+
     <p className="text-red-500">{error}</p>
   </div>
 );
 
-export { Input };
+export { Select };
