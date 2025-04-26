@@ -1,15 +1,34 @@
 import { useForm, useController } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
 import { schema, UserData } from "./UserDetailsForm.type";
 import { Input } from "../../atoms/Input";
 import { Select } from "../../atoms/Select";
 import { Button } from "../../atoms/Button";
+import { useNavigate } from "react-router";
+import axios from "axios";
+import { useAuthStore } from "../../../stores/auth";
 
 export const UserDetailsForm = () => {
+  const navigate = useNavigate();
+
+  const accessToken = useAuthStore((state) => state.accessToken);
+
+  const createUser = async (data: UserData) => {
+    const response = await axios.post("/api/users", data, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    console.log(response.data);
+    return response.data;
+  };
+
   const {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors },
   } = useForm<UserData>({
     resolver: zodResolver(schema),
@@ -27,7 +46,20 @@ export const UserDetailsForm = () => {
     name: "status",
   });
 
-  const onSubmit = () => {};
+  const { mutate, isPending, isError, error } = useMutation({
+    mutationFn: createUser,
+    onSuccess: () => {
+      reset();
+      navigate("/dashboard");
+    },
+    onError: (error) => {
+      console.error("Failed to create user:", error);
+    },
+  });
+
+  const onSubmit = (data: UserData) => {
+    mutate(data);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen">
@@ -65,7 +97,7 @@ export const UserDetailsForm = () => {
         />
         <Select
           className="w-full"
-          label="status"
+          label="Status:"
           error={statusState.error?.message}
           options={["Active", "Locked"]}
           value={statusField.value}
@@ -73,8 +105,9 @@ export const UserDetailsForm = () => {
           onBlur={statusField.onBlur}
           name={statusField.name}
         />
+        {isError && <p>{error.message}</p>}
         <div className="flex justify-center">
-          <Button type="submit">Submit</Button>
+          <Button disabled={isPending} type="submit">Submit</Button>
         </div>
       </form>
     </div>
