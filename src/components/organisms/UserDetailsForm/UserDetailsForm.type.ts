@@ -1,3 +1,4 @@
+import { SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 
 const schema = z.object({
@@ -14,5 +15,13 @@ const schema = z.object({
 
 type UserData = z.infer<typeof schema>;
 
-export type { UserData };
+type UserDetailsFormProps = {
+  defaultValues?: Partial<UserData>,
+  onSubmit: SubmitHandler<UserData>;
+  title: string;
+  isSubmitting: boolean;
+};
+
+export type { UserData, UserDetailsFormProps };
 export { schema };
+

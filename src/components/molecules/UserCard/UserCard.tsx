@@ -4,6 +4,7 @@ import { UserCardProps } from "./UserCard.type";
 import axios from "axios";
 import { useAuthStore } from "../../../stores/auth";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router";
 
 export const UserCard: React.FC<UserCardProps> = ({
   id,
@@ -13,6 +14,7 @@ export const UserCard: React.FC<UserCardProps> = ({
   birthday,
 }) => {
   const accessToken = useAuthStore((state) => state.accessToken);
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
     mutationFn: async () => {
@@ -58,7 +60,7 @@ export const UserCard: React.FC<UserCardProps> = ({
         </p>
       </div>
       <div className="flex justify-end space-x-3">
-        <Button className="py-1 text-xs">Edit</Button>
+        <Button className="py-1 text-xs" onClick={()=>navigate(`/dashboard/edit/${id}`)}>Edit</Button>
         <Button
           variant={ButtonVariant.DANGER}
           className="py-1 text-xs"

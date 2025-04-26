@@ -6,7 +6,8 @@ import { AuthenticationRoute } from "./routes/AuthenticationRoute";
 import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { useThemeStore } from "./stores/theme";
 import { Container } from "./components/organisms/Container";
-import { UserDetailsForm } from "./components/organisms/UserDetailsForm";
+import { CreateUser } from "./components/pages/CreateUser/CreateUser";
+import { EditUser } from "./components/pages/EditUser";
 
 function App() {
   const theme = useThemeStore((state) => state.theme);
@@ -39,7 +40,8 @@ function App() {
       >
         <Route index element={<Container />} />
         <Route path="/dashboard" element={<Container />} />
-        <Route path="/dashboard/new" element={<UserDetailsForm />} />
+        <Route path="/dashboard/new" element={<CreateUser />} />
+        <Route path="/dashboard/edit/:id" element={<EditUser />}/>
       </Route>
     </Routes>
   );
