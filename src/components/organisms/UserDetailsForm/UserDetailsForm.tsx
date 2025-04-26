@@ -8,6 +8,7 @@ import { Button } from "../../atoms/Button";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { useAuthStore } from "../../../stores/auth";
+import { toast } from "react-toastify";
 
 export const UserDetailsForm = () => {
   const navigate = useNavigate();
@@ -50,10 +51,11 @@ export const UserDetailsForm = () => {
     mutationFn: createUser,
     onSuccess: () => {
       reset();
+      toast.success("User Added Successfully");
       navigate("/dashboard");
     },
     onError: (error) => {
-      console.error("Failed to create user:", error);
+      toast.error(error.message);
     },
   });
 
@@ -107,7 +109,9 @@ export const UserDetailsForm = () => {
         />
         {isError && <p>{error.message}</p>}
         <div className="flex justify-center">
-          <Button disabled={isPending} type="submit">Submit</Button>
+          <Button disabled={isPending} type="submit">
+            Submit
+          </Button>
         </div>
       </form>
     </div>
