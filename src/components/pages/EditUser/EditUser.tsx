@@ -15,8 +15,8 @@ export const EditUser = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["user", id],
-    queryFn: () =>
-      axios
+    queryFn: async () =>
+      await axios
         .get(`/api/users/${id}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,

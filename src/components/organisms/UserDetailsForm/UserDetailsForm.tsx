@@ -22,7 +22,7 @@ export const UserDetailsForm = ({
       firstName: "",
       lastName: "",
       email: "",
-      status: "Active",
+      status: "active",
       dateOfBirth: "",
       ...defaultValues,
     },
@@ -71,7 +71,7 @@ export const UserDetailsForm = ({
           className="w-full"
           label="Status:"
           error={statusState.error?.message}
-          options={["Active", "Locked"]}
+          options={["active", "locked"]}
           value={statusField.value}
           onChange={statusField.onChange}
           onBlur={statusField.onBlur}

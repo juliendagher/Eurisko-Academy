@@ -8,7 +8,7 @@ const schema = z.object({
   dateOfBirth: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Invalid date format, expected YYYY-MM-DD"),
-  status: z.enum(["Active", "Locked"], {
+  status: z.enum(["active", "locked"], {
     errorMap: () => ({ message: "Choose status" }),
   }),
 });

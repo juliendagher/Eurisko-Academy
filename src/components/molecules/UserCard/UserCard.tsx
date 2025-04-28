@@ -16,7 +16,7 @@ export const UserCard: React.FC<UserCardProps> = ({
   const accessToken = useAuthStore((state) => state.accessToken);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: async () => {
       const response = await axios.delete(`/api/users/${id}`, {
         headers: {
@@ -65,6 +65,7 @@ export const UserCard: React.FC<UserCardProps> = ({
           variant={ButtonVariant.DANGER}
           className="py-1 text-xs"
           onClick={() => mutate()}
+          disabled={isPending}
         >
           Delete
         </Button>
